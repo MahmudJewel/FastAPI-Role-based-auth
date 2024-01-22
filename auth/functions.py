@@ -1,11 +1,12 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from auth import models, schemas
-# from passlib.context import CryptContext
+from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
-# from jose import JWTError, jwt
-# from fastapi.encoders import jsonable_encoder
+from jose import JWTError, jwt
+from fastapi.encoders import jsonable_encoder
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # get user by email 
 def get_user_by_email(db: Session, email: str):
@@ -13,8 +14,8 @@ def get_user_by_email(db: Session, email: str):
 
 # crete new user 
 def create_new_user(db: Session, user:schemas.UserCreate):
-    # hashed_password = functions.generate_password_hash(user.password)
-    new_user = models.User(email=user.email, password=user.password)
+    hashed_password = pwd_context.hash(user.password)
+    new_user = models.User(email=user.email, password=hashed_password)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
