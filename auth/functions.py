@@ -20,3 +20,7 @@ def create_new_user(db: Session, user:schemas.UserCreate):
     db.refresh(new_user)
     return new_user
 
+# get all user 
+def read_all_user(db: Session, skip: int, limit: int):
+    return db.query(models.User).offset(skip).limit(limit).all()
+
