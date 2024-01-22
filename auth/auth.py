@@ -10,3 +10,5 @@ router = APIRouter(
 async def read_auth_page():
     return {"msg": "Auth page Initialization done"}
 
+
+
