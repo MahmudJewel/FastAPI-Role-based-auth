@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, Column, Integer, String, Enum, ForeignKey
 from enum import Enum as PythonEnum
-from database import Base
+from core.database import Base
 
 class UserRole(str, PythonEnum):
 	customer = "customer"

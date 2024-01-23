@@ -2,8 +2,8 @@ from fastapi import FastAPI, APIRouter, Depends, HTTPException, status
 from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
 from auth import schemas, functions
-from dependencies import get_db
-import main
+from core.dependencies import get_db
+from core import main
 
 router = APIRouter(
     prefix="/auth", 

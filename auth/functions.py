@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from fastapi.encoders import jsonable_encoder
-import main
+from core import main
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
