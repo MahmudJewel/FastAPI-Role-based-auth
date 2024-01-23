@@ -38,4 +38,7 @@ async def update_user( user_id: int, user: schemas.UserUpdate, db: Session = Dep
     print(f"Received data: {user.model_dump()}")
     return functions.update_user(db, user_id, user)
 
-
+# delete user
+@router.delete('/users/{user_id}', response_model=schemas.User)
+async def update_user( user_id: int, db: Session = Depends(get_db)):
+    return functions.delete_user(db, user_id)

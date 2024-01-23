@@ -43,3 +43,10 @@ def update_user(db: Session, user_id: int, user: schemas.UserUpdate):
     db.refresh(db_user)
     return db_user
 
+# delete user
+def delete_user(db: Session, user_id: int):
+    db_user = get_user_by_id(db, user_id)
+    db.delete(db_user)
+    db.commit()
+    # db.refresh(db_user)
+    return db_user
