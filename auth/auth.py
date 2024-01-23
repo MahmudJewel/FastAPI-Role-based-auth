@@ -1,8 +1,9 @@
 from fastapi import FastAPI, APIRouter, Depends, HTTPException, status
 from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
+from typing import Annotated
 from auth import schemas, functions
-from core.dependencies import get_db
+from core.dependencies import get_db, oauth2_scheme, get_current_user
 from core import main
 
 router = APIRouter(
@@ -11,8 +12,9 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+
 @router.get('/')
-async def read_auth_page():
+async def read_auth_page(token: Annotated[str, Depends(oauth2_scheme)]):
     return {"msg": "Auth page Initialization done"}
 
 # create new user 
@@ -48,7 +50,7 @@ async def update_user( user_id: int, db: Session = Depends(get_db)):
 
 # ============> login/logout < ======================
 # getting access token for login 
-@router.post("/token", response_model=schemas.Token)
+@router.post("/login", response_model=schemas.Token)
 async def login_for_access_token(
     user: schemas.UserCreate,
     db: Session = Depends(get_db)
@@ -65,3 +67,10 @@ async def login_for_access_token(
         data={"sub": member.email}, expires_delta=access_token_expires
     )
     return schemas.Token(access_token=access_token, token_type="bearer")
+
+
+# get curren user 
+@router.get('/users/me/', response_model=schemas.User)
+async def read_current_user( current_user: Annotated[schemas.User, Depends(get_current_user)]):
+    return current_user
+
