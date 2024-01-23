@@ -1,7 +1,9 @@
-from fastapi import FastAPI, APIRouter, Depends, HTTPException
+from fastapi import FastAPI, APIRouter, Depends, HTTPException, status
+from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
 from auth import schemas, functions
 from dependencies import get_db
+import main
 
 router = APIRouter(
     prefix="/auth", 
@@ -42,3 +44,24 @@ async def update_user( user_id: int, user: schemas.UserUpdate, db: Session = Dep
 @router.delete('/users/{user_id}', response_model=schemas.User)
 async def update_user( user_id: int, db: Session = Depends(get_db)):
     return functions.delete_user(db, user_id)
+
+
+# ============> login/logout < ======================
+# getting access token for login 
+@router.post("/token", response_model=schemas.Token)
+async def login_for_access_token(
+    user: schemas.UserCreate,
+    db: Session = Depends(get_db)
+) -> schemas.Token:
+    member = functions.authenticate_user(db, user=user)
+    if not member:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=main.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = functions.create_access_token(
+        data={"sub": member.email}, expires_delta=access_token_expires
+    )
+    return schemas.Token(access_token=access_token, token_type="bearer")

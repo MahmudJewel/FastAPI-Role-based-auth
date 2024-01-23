@@ -16,3 +16,8 @@ class User(UserCreate):
 class UserUpdate(BaseModel):
 	is_active: bool
 	role: models.UserRole or None
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+

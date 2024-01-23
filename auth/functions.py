@@ -5,6 +5,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from fastapi.encoders import jsonable_encoder
+import main
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -50,3 +51,25 @@ def delete_user(db: Session, user_id: int):
     db.commit()
     # db.refresh(db_user)
     return db_user
+
+# =====================> login/logout <============================
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+def authenticate_user(db: Session, user: schemas.UserCreate):
+    member = get_user_by_email(db, user.email)
+    if not member:
+        return False
+    if not verify_password(user.password, member.password):
+        return False
+    return member
+
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, main.SECRET_KEY, algorithm=main.ALGORITHM)
+    return encoded_jwt
