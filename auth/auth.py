@@ -26,3 +26,16 @@ async def create_new_user(user: schemas.UserCreate, db: Session = Depends(get_db
 @router.get('/users', response_model=list[schemas.User])
 async def read_all_user( skip: int = 0, limit: int = 100,  db: Session = Depends(get_db)):
     return functions.read_all_user(db, skip, limit)
+
+# get user by id 
+@router.get('/users/{user_id}', response_model=schemas.User)
+async def read_all_user( user_id: int, db: Session = Depends(get_db)):
+    return functions.get_user_by_id(db, user_id)
+
+# update user
+@router.patch('/users/{user_id}', response_model=schemas.User)
+async def update_user( user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db)):
+    print(f"Received data: {user.model_dump()}")
+    return functions.update_user(db, user_id, user)
+
+

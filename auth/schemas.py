@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from auth import models
 class UserBase(BaseModel):
 	email: str
 
@@ -9,8 +9,10 @@ class UserCreate(UserBase):
 class User(UserCreate):
 	id: int
 	is_active: bool
-	role: str or None
+	role: models.UserRole or None
 	class Config:
 		orm_mode = True
 
-
+class UserUpdate(BaseModel):
+	is_active: bool
+	role: models.UserRole or None
