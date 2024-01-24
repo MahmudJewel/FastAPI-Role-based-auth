@@ -64,7 +64,7 @@ async def login_for_access_token(
         )
     access_token_expires = timedelta(minutes=main.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = functions.create_access_token(
-        data={"sub": member.email}, expires_delta=access_token_expires
+        data={"id": member.id, "email": member.email, "role": member.role}, expires_delta=access_token_expires
     )
     return schemas.Token(access_token=access_token, token_type="bearer")
 
