@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
 from typing import Annotated
 from auth import schemas, functions
-from core.dependencies import get_db, oauth2_scheme, get_current_user
+from core.dependencies import get_db, oauth2_scheme
 from core import main
 
 router = APIRouter(
@@ -71,6 +71,6 @@ async def login_for_access_token(
 
 # get curren user 
 @router.get('/users/me/', response_model=schemas.User)
-async def read_current_user( current_user: Annotated[schemas.User, Depends(get_current_user)]):
+async def read_current_user( current_user: Annotated[schemas.User, Depends(functions.get_current_user)]):
     return current_user
 

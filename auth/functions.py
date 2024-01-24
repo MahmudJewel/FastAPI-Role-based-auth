@@ -1,11 +1,14 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, status, Depends
 from sqlalchemy.orm import Session
 from auth import models, schemas
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from fastapi.encoders import jsonable_encoder
+from typing import Annotated
+
 from core import main
+from core import dependencies
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -75,4 +78,20 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 # get current users info 
-
+def get_current_user(token: Annotated[str, Depends(dependencies.oauth2_scheme)], db: Annotated[Session, Depends(dependencies.get_db)]):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid authentication credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, main.SECRET_KEY, algorithms=[main.ALGORITHM])
+        current_email: str = payload.get("sub")
+        if current_email is None:
+            raise credentials_exception
+        user = get_user_by_email(db, current_email)
+        if user is None:
+            raise credentials_exception
+        return user
+    except JWTError:
+        raise credentials_exception
