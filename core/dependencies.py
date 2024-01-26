@@ -5,9 +5,6 @@ from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 
 from core.database import SessionLocal, engine
-from core import main
-from auth import models
-from auth import functions as auth_functions
 
 # db connection
 def get_db():

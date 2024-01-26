@@ -5,6 +5,7 @@ from typing import Annotated
 from auth import schemas, functions
 from core.dependencies import get_db, oauth2_scheme
 from core import main
+from .dependencies import RoleChecker
 
 router = APIRouter(
     prefix="/auth", 
@@ -27,23 +28,35 @@ async def create_new_user(user: schemas.UserCreate, db: Session = Depends(get_db
     return new_user
 
 # get all user 
-@router.get('/users', response_model=list[schemas.User])
+@router.get('/users', 
+            response_model=list[schemas.User],
+            dependencies=[Depends(RoleChecker(['admin']))]
+            )
 async def read_all_user( skip: int = 0, limit: int = 100,  db: Session = Depends(get_db)):
     return functions.read_all_user(db, skip, limit)
 
 # get user by id 
-@router.get('/users/{user_id}', response_model=schemas.User)
+@router.get('/users/{user_id}', 
+            response_model=schemas.User,
+            dependencies=[Depends(RoleChecker(['admin']))]
+            )
 async def read_all_user( user_id: int, db: Session = Depends(get_db)):
     return functions.get_user_by_id(db, user_id)
 
 # update user
-@router.patch('/users/{user_id}', response_model=schemas.User)
+@router.patch('/users/{user_id}', 
+              response_model=schemas.User,
+              dependencies=[Depends(RoleChecker(['admin']))]
+              )
 async def update_user( user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db)):
     print(f"Received data: {user.model_dump()}")
     return functions.update_user(db, user_id, user)
 
 # delete user
-@router.delete('/users/{user_id}', response_model=schemas.User)
+@router.delete('/users/{user_id}', 
+               response_model=schemas.User,
+               dependencies=[Depends(RoleChecker(['admin']))]
+               )
 async def update_user( user_id: int, db: Session = Depends(get_db)):
     return functions.delete_user(db, user_id)
 

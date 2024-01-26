@@ -86,7 +86,7 @@ def get_current_user(token: Annotated[str, Depends(dependencies.oauth2_scheme)],
     )
     try:
         payload = jwt.decode(token, main.SECRET_KEY, algorithms=[main.ALGORITHM])
-        print(f"Payload =====> {payload}")
+        # print(f"Payload =====> {payload}")
         current_email: str = payload.get("email")
         if current_email is None:
             raise credentials_exception
