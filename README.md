@@ -1,18 +1,18 @@
-## FastAPI-Role based access control
+# FastAPI-Role Based Access Control
+## There are multiple types of user like
+* customer
+* admin
+* vendor
+They have different access control on the project.
 
-# Covered topics
+## Covered topics
 * Enum types
 * Abstract model like common model
 * RBAC with dependenies and routes.
 * Datetime in SQLAlchemy and Pydantic
 * Alembic = database migrations
 
-# There are multiple types of user like
-* customer
-* admin
-* vendor
-
-# Developed API
+## Developed API
 | SRL | METHOD | ROUTE | FUNCTIONALITY | Required Fields | ACCESS |
 | ------- | ------- | ----- | ------------- | ------------- | ------------- |
 | *1* | *POST* | ```/auth/token``` | _Login user_| _email, password_| _All users_|
