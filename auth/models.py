@@ -13,4 +13,6 @@ class User(CommonModel):
 	email = Column(String, unique=True, index=True)
 	password = Column(String)
 	role = Column(Enum(UserRole), default=UserRole.customer)
+	# testing = Column(String, default='ok', nullable=True)
 
+metadata = Base.metadata
