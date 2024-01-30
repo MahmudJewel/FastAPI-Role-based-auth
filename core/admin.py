@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 from sqladmin import Admin, ModelView
-from auth import auth, functions, schemas
 from auth.models import User
-from core.database import SessionLocal, engine
 app = FastAPI()
 
 

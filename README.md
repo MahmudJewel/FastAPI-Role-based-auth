@@ -3,7 +3,7 @@
 * customer
 * admin
 * vendor
-They have different access control on the project.
+* - They have different access control on the project.
 
 ## Covered topics
 * Enum types
@@ -11,6 +11,8 @@ They have different access control on the project.
 * RBAC with dependenies and routes.
 * Datetime in SQLAlchemy and Pydantic
 * Alembic = database migrations
+* Alembic = database migrations
+* sqladmin = SQLAlchemy Admin
 
 ## Developed API
 | SRL | METHOD | ROUTE | FUNCTIONALITY | Required Fields | ACCESS |
@@ -23,6 +25,7 @@ They have different access control on the project.
 | *6* | *PATCH* | ```/auth/users/{user_id}``` | _Update the user partially_|_email, password, is_active, role_| _Admin_|
 | *7* | *DELETE* | ```auth/users/{user_id}``` | _Delete the user_|_None_| _admin_|
 | *8* | *GET* | ```/``` | _Home page_|_None_| _anyone_|
+| *9* | *GET* | ```/admin``` | _Admin Dashboard_|_None_| admin_|
 
 
 # Tools
